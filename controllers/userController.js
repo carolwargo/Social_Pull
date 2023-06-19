@@ -1,5 +1,6 @@
 const { ObjectId } = require('mongoose').Types;
-const { User, Course } = require('../models');
+const { User, Thought } = require('../models');
+const Thought = require('../models/Thought');
 
 // Aggregate function to get the number of users overall
 const headCount = async () => {
@@ -8,10 +9,13 @@ const headCount = async () => {
   return numberOfUsers;
 }
 
-// Aggregate function for getting the overall grade using $avg
+// AGGREGATE FUNCTION
+// CHANGE GRADE------
 const grade = async (userId) =>
   User.aggregate([
-    // only include the given user by using $match
+
+    // only INCLUDE the given user by using $match
+
     { $match: { _id: new ObjectId(userId) } },
     {
       $unwind: '$thought',
@@ -25,7 +29,8 @@ const grade = async (userId) =>
   ]);
 
 module.exports = {
-  // Get all users
+
+  // GET ALL users
   async getUsers(req, res) {
     try {
       const users = await User.find();
@@ -41,7 +46,7 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // Get a single user
+  // GET single user
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.userId })
@@ -60,7 +65,7 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // create a new user
+  // CREATE new user
   async createUser(req, res) {
     try {
       const user = await User.create(req.body);
@@ -69,7 +74,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Delete a user and remove them from the course
+  // DELETE user and REMOVE them from the thought
   async deleteUser(req, res) {
     try {
       const user = await User.findOneAndRemove({ _id: req.params.userId });
@@ -78,15 +83,15 @@ module.exports = {
         return res.status(404).json({ message: 'No such user exists' });
       }
 
-      const course = await Course.findOneAndUpdate(
+      const thought = await Thought.findOneAndUpdate(
         { users: req.params.userId },
         { $pull: { users: req.params.userId } },
         { new: true }
       );
 
-      if (!course) {
+      if (!thought) {
         return res.status(404).json({
-          message: 'User deleted, but no courses found',
+          message: 'User deleted, but no thoughts found',
         });
       }
 
