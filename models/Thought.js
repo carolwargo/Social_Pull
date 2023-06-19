@@ -1,6 +1,10 @@
 const { Schema, model } = require('mongoose');
 
-// REACTION schema
+const mongoose = require('mongoose');
+const reactionSchema = require('./ReactionSchema');
+
+//set up VIRTUAL REACTION 
+
 const reactionSchema = new mongoose.Schema({
   reactionBody: {
     type: String,
