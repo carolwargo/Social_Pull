@@ -1,32 +1,4 @@
-//NOTES: REASONING FOR CODE 
-/*
-The Thought schema is defined with the required fields: thoughtText, createdAt, username, and reactions.
-The thoughtText field is of type String, required, and should be between 1 and 280 characters in length.
-The createdAt field is of type Date, and its default value is set to the current timestamp using Date.now(). A getter method is defined to format the timestamp on query.
-The username field represents the user that created the thought and is of type String and required.
-The reactions field is an array of nested documents created with the reactionSchema, which is defined separately.
-The virtual field reactionCount is defined to retrieve the length of the thought's reactions array field on query.
-You can use this Thought schema in your Express and MongoDB application to create, update, and query thought data while leveraging the defined schema and virtual fields.
 
-Make sure you have Mongoose and MongoDB set up in your project, and use the Thought model wherever you need to interact with thought data.
-*/
-
-//CODE FOR REACTION schema
-
-/*
-const mongoose = require('mongoose');
-const reactionSchema = require('../schemas/ReactionSchema');
-
-const thoughtSchema = new mongoose.Schema({
-  // Main fields of the Thought model
-  // ...
-  reactions: [reactionSchema]
-});
-
-const Thought = mongoose.model('Thought', thoughtSchema);
-
-module.exports = Thought;
-*/
 
 //MAIN CODE (integrate reaction schema)
 const mongoose = require('mongoose');
