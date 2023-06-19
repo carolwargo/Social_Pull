@@ -1,13 +1,5 @@
+const { Schema, model } = require('mongoose');
 
-
-//MAIN CODE (integrate reaction schema)
-const mongoose = require('mongoose');
-
-//NEED CODE TO ADD thoughtSchema
-/*
-const thoughtSchema = require('../schemas/ThoughtSchema');
-const Thought = mongoose.model('Thought', thoughtSchema);
-*/
 // REACTION schema
 const reactionSchema = new mongoose.Schema({
   reactionBody: {

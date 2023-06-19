@@ -1,15 +1,5 @@
-//NOTE: REASONING FOR CODE
-/*
-The User schema is defined with the required fields: username, email, thoughts, and friends.
-The username field is of type String, unique, required, and trimmed.
-The email field is of type String, required, unique, and validated using a regular expression pattern for matching valid email addresses.
-The thoughts field is an array of _id values referencing the Thought model.
-The friends field is an array of _id values referencing the User model, allowing for self-referencing relationships.
-The virtual field friendCount is defined using the get function to return the length of the friends array field.
-You can use this User schema in your Express and MongoDB application to create, update, and query user data while leveraging the defined schema and virtual fields.
-*/
-
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
+const thoughtSchema = require('./Thought');
 
 // DEFINE the User schema
 const userSchema = new mongoose.Schema({
