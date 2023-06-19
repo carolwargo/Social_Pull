@@ -1,7 +1,15 @@
-const mongoose = require('mongoose');
-// CREATE & NAME --- then add name to mongoose.connect
-// WRAP Mongoose around local connection to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/myfirstmongooseapp');
+const {connect, connection} = require('mongoose');
 
-// EXPORT connection 
-module.exports = mongoose.connection;
+connect('mongodb://localhost/socialpullapiDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+  });
+
+  // EXPORT connection 
+module.exports = connection;
