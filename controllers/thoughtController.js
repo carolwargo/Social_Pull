@@ -15,7 +15,7 @@ module.exports = {
 
   // GET SINGLE thought by id
   //!!! SHOULD I add '_v' field
-  async getSingleThought(req, res) {
+  async getThought(req, res) {
     try {
       const thought = await Thought.findOne({ _id: req.params.thoughtId });
   
@@ -30,9 +30,9 @@ module.exports = {
   },
   
   // CREATE thought
-  async createThought(req, res) {
+  async newThought(req, res) {
     try {
-      const thought = await Thought.create(req.body);
+      const thought = await Thought.new(req.body);
       const user = await User.findOneAndUpdate(
         {_id: req.body.userId },
         { $addToSet: { thoughts: thought._id } },
@@ -46,6 +46,25 @@ module.exports = {
       res.status(200).json(user);
     } catch (err) {
       console.log(err);
+      res.status(500).json(err);
+    }
+  },
+
+  // UPDATE single thought by id
+  async updateThought(req, res) {
+    try {
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $set: req.body },
+        { runValidators: true, new: true }
+      ).exec();
+
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought with this id!' });
+      }
+
+      res.status(200).json(thought);
+    } catch (err) {
       res.status(500).json(err);
     }
   },
@@ -70,25 +89,6 @@ module.exports = {
       }
       
       res.status(200).json({ message: 'Thought and users deleted!' });
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  },
-
-  // UPDATE single thought by id
-  async updateThought(req, res) {
-    try {
-      const thought = await Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $set: req.body },
-        { runValidators: true, new: true }
-      ).exec();
-
-      if (!thought) {
-        return res.status(404).json({ message: 'No thought with this id!' });
-      }
-
-      res.status(200).json(thought);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -131,6 +131,6 @@ async removeThoughtReaction(req, res) {
     res.status(500).json(err);
   }
  }
-}
+};
 
 
