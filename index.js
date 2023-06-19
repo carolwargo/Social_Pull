@@ -1,4 +1,3 @@
-//SAMPLE SERVER.JS fix syntax to match db
 const express = require('express');
 const db = require('./config/connection');
 const routes = require('./routes');
@@ -8,7 +7,8 @@ const cwd = process.cwd();
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-// NOTE: not needed for Express server to function- Indicate what activity's server is running in the terminal.
+// CHANGE ACTIVITIES
+// Note: not needed for Express server to function. This just helps indicate what activity's server is running in the terminal.
 const activity = cwd.includes('01-Activities')
   ? cwd.split('/01-Activities/')[1]
   : cwd;
