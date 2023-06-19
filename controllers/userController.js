@@ -32,7 +32,7 @@ module.exports = {
     },
    
     //CREATE new user
-    async NewUser(req, res) {
+    async newUser(req, res) {
         try {
             const user =await User.create(req.body);
             res.status(200).json(user);     
