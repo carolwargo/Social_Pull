@@ -1,15 +1,15 @@
-const {connect, connection} = require('mongoose');
+const { connect, connection } = require("mongoose");
 
-connect('mongodb://localhost/socialpullapiDB', {
+connect("mongodb://localhost:27017/socialpullapiDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
   })
   .catch((err) => {
-    console.error('Error connecting to MongoDB:', err);
+    console.error("Error connecting to MongoDB:", err);
   });
 
-  // EXPORT connection 
+// EXPORT connection
 module.exports = connection;
