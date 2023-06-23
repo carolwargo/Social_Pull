@@ -1,5 +1,4 @@
-const { Schema, model } = require("mongoose");
-const thoughtSchema = require("./Thought");
+const mongoose = require("mongoose");
 
 // VALIDATE user by id
 const validateEmail = (email) => {
@@ -7,6 +6,7 @@ const validateEmail = (email) => {
   return re.test(email);
 };
 
+// DEFINE the User schema
 // DEFINE the User schema
 const userSchema = new mongoose.Schema(
   {
@@ -21,8 +21,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      validateEmail: [validateEmail, "Enter a valid email address"],
-      match: /^\S+@\S+\.\S+$/, // Email validation using regex pattern
+      validate: [validateEmail, "Enter a valid email address"],
     },
 
     thoughts: [
@@ -31,12 +30,14 @@ const userSchema = new mongoose.Schema(
         ref: "Thought",
       },
     ],
+    
     friends: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],
+   
   },
   {
     toJSON: {
