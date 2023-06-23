@@ -1,6 +1,5 @@
-const { Schema, model } = require("mongoose");
-const Reaction = require("./Reaction");
-//set up VIRTUAL REACTION
+const mongoose = require("mongoose");
+const reactionSchema = require("./Reaction");
 
 // THOUGHT schema
 const thoughtSchema = new mongoose.Schema(
