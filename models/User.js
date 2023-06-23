@@ -7,7 +7,6 @@ const validateEmail = (email) => {
 };
 
 // DEFINE the User schema
-// DEFINE the User schema
 const userSchema = new mongoose.Schema(
   {
     username: {

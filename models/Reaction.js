@@ -1,5 +1,5 @@
 // REACTION schema  THOUGHTS model
-const { Schema, Types } = require("mongoose");
+const mongoose = require("mongoose");
 
 const reactionSchema = new mongoose.Schema(
   {

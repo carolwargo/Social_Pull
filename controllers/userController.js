@@ -20,6 +20,7 @@ module.exports = {
                 .populate('thoughts')
                 .select('-__v')
                 .exec();
+                
             if (!user) {
                 return res.status(404).json({ messsage: 'No user found with that id'});
             }
