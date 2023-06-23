@@ -1,4 +1,4 @@
-// REACTION schema t THOUGHTS model
+// REACTION schema  THOUGHTS model
 const { Schema, Types } = require("mongoose");
 
 const reactionSchema = new mongoose.Schema(
