@@ -100,7 +100,7 @@ module.exports = {
       })
       .catch((err) => res.status(500).json(err));
   },
-  
+
   async addThoughtReaction(req, res) {
     try {
       const { thoughtId } = req.params;
