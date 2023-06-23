@@ -1,7 +1,34 @@
-const { Thought, User } = require('../models');
+const { ObjectId } = require('mongoose').Types;
+const { Thought, User, Reaction } = require('../models');
+
+// Assuming you have the necessary modules and dependencies imported
+
+// Aggregate function to get the reactions to a thought of a friend
+const getReactions = async (userId, friendId, thoughtId) => {
+  const reactions = await Reaction.aggregate([
+    { $match: { thoughtId: new ObjectId(thoughtId) } },
+    { $match: { userId: new ObjectId(friendId) } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'user'
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        reactionType: 1,
+        user: { $arrayElemAt: ['$user', 0] }
+      }
+    }
+  ]);
+  
+  return reactions;
+};
 
 module.exports = {
-
   // GET ALL thoughts async
   async getAllThoughts(req, res) {
     try {
@@ -14,11 +41,10 @@ module.exports = {
   },
 
   // GET SINGLE thought by id
-  //!!! SHOULD I add '_v' field
   async getThought(req, res) {
     try {
       const thought = await Thought.findOne({ _id: req.params.thoughtId })
-      .select('-__v');
+        .select('-__v');
   
       if (!thought) {
         return res.status(404).json({ message: 'No thought with that ID' });
@@ -33,15 +59,15 @@ module.exports = {
   // CREATE thought
   async newThought(req, res) {
     try {
-      const thought = await Thought.new(req.body);
+      const thought = await Thought.create(req.body);
       const user = await User.findOneAndUpdate(
-        {_id: req.body.userId },
+        { _id: req.body.userId },
         { $addToSet: { thoughts: thought._id } },
         { new: true }
       ).exec();
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found with that ID'});  
+        return res.status(404).json({ message: 'User not found with that ID' });  
       }
 
       res.status(200).json(user);
@@ -86,7 +112,7 @@ module.exports = {
       ).exec();
 
       if (!user) {
-        return res.status(404).json({ message: 'No thought with that ID was found'});
+        return res.status(404).json({ message: 'No thought with that ID was found' });
       }
       
       res.status(200).json({ message: 'Thought and users deleted!' });
@@ -96,7 +122,7 @@ module.exports = {
   },
 
   // ADD Reaction to reaction array by specific Thought id
-async addThoughtReaction(req, res) {
+  async addThoughtReaction(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
@@ -108,30 +134,30 @@ async addThoughtReaction(req, res) {
         return res.status(404).json({ message: 'No thought with that ID was found' });
       }
   
-    res.status(200).json(thought);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-},
-
-//DELETES Reaction from reaction array by thought id
-async removeThoughtReaction(req, res) {
-    try {
-        const thought = await Thought.findOneAndUpdate(
-          { _id: req.params.thoughtId },
-          { $addToSet: { reactions: req.body } },
-          { runValidators: true, new: true }
-        ).exec();
-    
-    if (!thought) {
-        return res.status(404).json({ message: 'No thought with this id was found '})
+      res.status(200).json(thought);
+    } catch (err) {
+      res.status(500).json(err);
     }
+  },
 
-    res.status(200).json(thought);
-  }   catch (err) {
-    res.status(500).json(err);
-  }
- }
+  // DELETES Reaction from reaction array by thought id
+  async removeThoughtReaction(req, res) {
+    try {
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: req.body } },
+        { runValidators: true, new: true }
+      ).exec();
+  
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought with this id was found '});
+      }
+  
+      res.status(200).json(thought);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
+  
+  getReactions
 };
-
-
