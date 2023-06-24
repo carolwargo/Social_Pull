@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Thought } = require("./models");
+const { Thought } = require("../models");
 
 const thoughts = [
   {
