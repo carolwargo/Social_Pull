@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       validate: [validateEmail, "Enter a valid email address"],
+      match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Enter a valid email address']
     },
-
     thoughts: [
-      {
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Thought",
       },
