@@ -1,7 +1,7 @@
 const { User, Thought } = require("../models");
 
 module.exports = {
-  getUser(req, res) {
+  getAllUsers(req, res) {
     User.find({})
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
@@ -49,7 +49,9 @@ module.exports = {
         if (!user) {
           res.status(404).json({ message: "No User found with this ID!" });
         } else {
-          return Thought.deleteMany({ _id: { $in: user.thoughts } }).then(() => user);
+          return Thought.deleteMany({ _id: { $in: user.thoughts } }).then(
+            () => user
+          );
         }
       })
       .then((user) => {
@@ -78,11 +80,10 @@ module.exports = {
       { $pull: { friends: req.params.friendId } },
       { new: true }
     )
-      .then(
-        (user) =>
-          !user
-            ? res.status(404).json({ message: "No User found with this ID!" })
-            : res.json(user)
+      .then((user) =>
+        !user
+          ? res.status(404).json({ message: "No User found with this ID!" })
+          : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
   },
