@@ -5,4 +5,4 @@ mongoose.connect("mongodb://localhost:27017/socialpullapiDB", {
   useUnifiedTopology: true,
 });
 
-module.exports = connection;
+module.exports = mongoose.connection;
