@@ -14,26 +14,27 @@ const thoughts = [
 
 const seedThoughts = async () => {
   try {
-    // Connect to your MongoDB database
+    // CONNECT to MongoDB database
     await mongoose.connect("mongodb://localhost:27017/socialpullapiDB", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    // Delete all existing thoughts in the database
+    // DELETE existing thoughts in the database
     await Thought.deleteMany();
 
-    // Create new thoughts using the sample data
+    // CREATE new thoughts using the sample data
     await Thought.insertMany(thoughts);
 
     console.log("Thoughts seeded successfully");
   } catch (error) {
     console.error("Error seeding thoughts:", error);
   } finally {
-    // Disconnect from the database
+
+    // DISCONNECT from the database
     mongoose.disconnect();
   }
 };
 
-// Call the function to seed the thoughts when this script is run
+// CALL function to seed the thoughts when this script is run
 seedThoughts();
