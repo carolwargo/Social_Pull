@@ -1,12 +1,15 @@
 const { User, Thought } = require("../models");
 
 module.exports = {
+
+ //GET ALL users
   getAllUsers(req, res) {
     User.find({})
-      .then((user) => res.json(user))
+      .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
 
+  //GET SINGLE user by id
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .populate("thoughts")
@@ -17,18 +20,19 @@ module.exports = {
           ? res.status(404).json({ message: "No User found with that ID!" })
           : res.json(user)
       )
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        res.status(500).json(err)
+    });    
   },
 
+  // CREATE NEW user
   createUser(req, res) {
     User.create(req.body)
-      .then((user) => res.json(user))
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json(err);
-      });
+    .then((user) => res.status(200).json(user))
+    .catch((err) => res.status(500).json(err));
   },
 
+  //UPDATE user by id
   updateUser(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -43,25 +47,19 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 
+  //DELETE user by id
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).json({ message: "No User found with this ID!" });
-        } else {
-          return User.findOneAndUpdate(
-            { user: req.params.userId },
-            { $pull: {user: req.params.userId } },
-            { new: true }
-          ).then(() => user);
-        }  
-      })
-      .then((user) => {
-        res.json({ message: "User ${user._id} successfully deleted"});
-      })
-      .catch((err) => res.status(500).json(err));
-  },
+      .then((user) => 
+        !user 
+        ? res.status(404).json({ message: 'No user with that Id was found'})
+        : Thought.deleteMany({ _id: { $in: user.thoughts }})
+    )
+    .then(() => res.status(200).json({ message: 'User and their respective thoughts have been deleted'}))
+    .catch((err) => res.status(500).json(err));
+},
 
+//ADD new friend
   addFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -77,6 +75,7 @@ module.exports = {
     .catch((err) => res.status(500).json(err));
   }, 
 
+// DELETE exising friend
   deleteFriend(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -90,5 +89,5 @@ module.exports = {
         res.json(user);
       })
       .catch((err) => res.status(500).json(err));
-  },
+  }
 };
